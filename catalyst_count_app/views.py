@@ -58,7 +58,7 @@ def csv_upload(request):
     else:
         return render(request, 'upload.html')
     
-@login_required
+    
 def search_csv_data(query_params):
     queryset = csv_data.objects.all()
     total_count = queryset.count()  # Initial count of all records
@@ -123,7 +123,7 @@ def search_csv_data(query_params):
 
     return results, total_count
 
-@login_required
+
 def querybuilder(request):
     data = csv_data.objects.all().values('year_founded', 'industry', 'size_range', 'locality', 'country').distinct()
 
