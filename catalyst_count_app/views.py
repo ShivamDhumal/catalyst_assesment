@@ -3,6 +3,23 @@ import pandas as pd
 from .models import csv_data
 from django.db.models import Q 
 from django.contrib import messages
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
+from django.urls import reverse_lazy
+from django.views.generic import CreateView
+from django.contrib.auth.views import LoginView
+
+
+
+class SignUpView(CreateView):
+    form_class = UserCreationForm
+    success_url = reverse_lazy('userdata') 
+    template_name = 'account/singup.html'
+
+
+class CustomLoginView(LoginView):
+    template_name = 'account/login.html'
+    redirect_authenticated_user = True 
 
 
 def csv_upload(request):
@@ -46,9 +63,6 @@ def csv_upload(request):
     else:
         return render(request, 'upload.html')
     
-
-
-
 
 def search_csv_data(query_params):
     queryset = csv_data.objects.all()
@@ -115,7 +129,6 @@ def search_csv_data(query_params):
     return results, total_count
 
 
-
 def querybuilder(request):
     data = csv_data.objects.all().values('year_founded', 'industry', 'size_range', 'locality', 'country').distinct()
 
@@ -141,33 +154,11 @@ def querybuilder(request):
 
     return render(request, 'quirybuilder.html', {'data': data})
 
-from django.contrib.auth.models import User
 
 def userdata(request):
     user1 = User.objects.all()
     return render(request, "userdata.html", {'user1': user1})
 
-
-from django.contrib.auth.forms import UserCreationForm
-from django.urls import reverse_lazy
-from django.views.generic import CreateView
-from django.contrib.auth.views import LoginView
-
-class SignUpView(CreateView):
-    form_class = UserCreationForm
-    success_url = reverse_lazy('userdata') 
-    template_name = 'account/singup.html'
-
-
-
-class CustomLoginView(LoginView):
-    template_name = 'account/login.html'
-    redirect_authenticated_user = True 
-
-
-
-from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
 
 def delete_user_by_id(request, user_id):
     if request.method == 'POST':
