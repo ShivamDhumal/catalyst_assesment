@@ -7,14 +7,8 @@ urlpatterns = [
   path('uploaddata', views.csv_upload , name = "uploaddata"),
   path('Querybuilder/' , views.querybuilder , name = 'querybuilder'),
   path('userdata/' ,views.userdata , name = 'userdata'),
-  
-#   path('useradd/', views.useradd , name = 'useradd' ),
-#   path('delete/', views.deletedata , name = 'delete' ),
-
-    path('accounts/login/', CustomLoginView.as_view(), name='account_login'),
-    path('accounts/signup/', SignUpView.as_view(), name='account_signup'),
-    path('delete_user/<int:user_id>/', delete_user_by_id, name='delete_user_by_id'),
-
-
+  path('accounts/login/', CustomLoginView.as_view(), name='account_login'),
+  path('accounts/signup/', SignUpView.as_view(), name='account_signup'),
+  path('delete_user/<int:user_id>/', delete_user_by_id, name='delete_user_by_id'),
 ]
     

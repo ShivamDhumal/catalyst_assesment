@@ -8,6 +8,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from django.contrib.auth.views import LoginView
+from django.contrib.auth.decorators import login_required
 
 
 
@@ -21,27 +22,21 @@ class CustomLoginView(LoginView):
     template_name = 'account/login.html'
     redirect_authenticated_user = True 
 
-
+@login_required
 def csv_upload(request):
     if request.method == 'POST' and request.FILES.get('csv_file'):
         file = request.FILES['csv_file']
         try:
             batch_size = 1000 
-
             csv_reader = pd.read_csv(file, chunksize=batch_size)
-
             for chunk in csv_reader:
                 chunk = chunk.dropna(how='all')
-
                 if chunk.empty:
                     break
-
                 csv_data_list = []
-
                 for _, row in chunk.iterrows():
                     csv_data_list.append(
                         csv_data(
-                            # company_data=row['company_data'],
                             name=row['name'],
                             domain=row['domain'],
                             year_founded=row['year founded'],
@@ -63,7 +58,7 @@ def csv_upload(request):
     else:
         return render(request, 'upload.html')
     
-
+@login_required
 def search_csv_data(query_params):
     queryset = csv_data.objects.all()
     total_count = queryset.count()  # Initial count of all records
@@ -128,7 +123,7 @@ def search_csv_data(query_params):
 
     return results, total_count
 
-
+@login_required
 def querybuilder(request):
     data = csv_data.objects.all().values('year_founded', 'industry', 'size_range', 'locality', 'country').distinct()
 
@@ -154,12 +149,12 @@ def querybuilder(request):
 
     return render(request, 'quirybuilder.html', {'data': data})
 
-
+@login_required
 def userdata(request):
     user1 = User.objects.all()
     return render(request, "userdata.html", {'user1': user1})
 
-
+@login_required
 def delete_user_by_id(request, user_id):
     if request.method == 'POST':
         try:
